@@ -10,13 +10,10 @@ class Cell:
             self.nums -= other.nums
         else:
             print('!!!вычитание клеток возможно только если первая больше второй')
-        return self
+        return Cell(self.nums)
 
     def __mul__(self, other):
         return Cell(self.nums * other.nums)
-
-    def __floordiv__(self, other):
-        return Cell((self.nums + other.nums)//2)
 
     def __truediv__(self, other):
         return Cell((self.nums + other.nums)//2)
