@@ -26,6 +26,8 @@ class Warehouse:
             input('\n...нажмите Enter чтобы продолжить...')
             return
         ch = select_eq(self.device)
+        if ch is None:
+            return
         del self.device[ch]
         other.device[ch] = input('введите список работ: ')
 
@@ -36,6 +38,8 @@ class Warehouse:
             input('\n...нажмите Enter чтобы продолжить...')
             return
         ch = select_eq(self.device)
+        if ch is None:
+            return
         del self.device[ch]
         other.device[ch] = f'к оплате - {input("введите стоимость работ: ")} руб'
 
@@ -46,6 +50,8 @@ class Warehouse:
             input('\n...нажмите Enter чтобы продолжить...')
             return
         ch = select_eq(self.device)
+        if ch is None:
+            return
         print('демонстрация работы техники:')
         ch.test()
         del self.device[ch]
@@ -86,10 +92,17 @@ class Xerox(Equipment):
 def select_eq(eq_dict):
     """предоставляет выбор элемента оргтехники из остатков склада хранимых в справочнике"""
     ex_list = list(eq_dict.keys())
-    str_choice = ''
+    str_choice = '[0] - отмена, вернуться в предыдущее меню...\n'
     for i, k in enumerate(ex_list):
         str_choice += f'[{i + 1}] - {type(k).__name__} ({k.maker} , {k.model}) - комментарий: {eq_dict[k]}\n'
-    key = int(input(str_choice + 'введите порядковый номер - '))
+    key = input(str_choice + 'введите порядковый номер - ')
+    if not key.isdigit() or int(key) > len(ex_list) or int(key) < 0:
+        print('некорректный выбор, вы будете возвращены в предыдущее меню...')
+        input('нажмите Enter чтобы продолжить...')
+        return None
+    key = int(key)
+    if key == 0:
+        return None
     return ex_list[key - 1]
 
 
@@ -97,9 +110,12 @@ cls = lambda: print('\n' * 30)  # не нашел очистку экрана, �
 ware_dict = {1: Warehouse('Этап 1', 'Принято на диагностику'),
              2: Warehouse('Этап 2', 'В ремонте'),
              3: Warehouse('Этап 3', 'К выдаче клиенту')}
-
-menu = {1: 'Прием техники от клиента', 2: 'Передача в ремонт', 3: 'Завершение ремонта',
-        4: 'Выдача клиенту', 5: 'Остатки техники на складах', 0: 'Выход из программы'}
+menu = {1: 'Прием техники от клиента',
+        2: 'Передача в ремонт',
+        3: 'Завершение ремонта',
+        4: 'Выдача клиенту',
+        5: 'Остатки техники на складах',
+        0: 'Выход из программы'}
 str_menu = '\n'.join([f'[{i}] - {j}' for i, j in menu.items()])
 # начальное заполнение складов:
 ware_dict[1].device[Printer('HP', 'LJ1000')] = 'заменить картридж'
@@ -109,24 +125,30 @@ ware_dict[2].device[Scanner('HP', 'SXN3200')] = 'произвести замен
 ware_dict[2].device[Xerox('Xerox', 'X2500')] = 'установить новый ремкомплект'
 ware_dict[3].device[Scanner('HP', 'SXN3200')] = 'к оплате - 1000 руб'
 ware_dict[3].device[Xerox('Xerox', 'X2500')] = 'к оплате - 2000 руб'
-
+# основная часть программы
 while True:
     print('ГЛАВНОЕ МЕНЮ:')
     print(str_menu)
-    user_choise = int(input('\nвведите номер операции: '))
+    user_choise = input('\nвведите номер операции: ')
+    if not user_choise.isdigit() or int(user_choise) > 5 or int(user_choise) < 0:
+        print('некорректный выбор...повторите ввод...')
+        input('\n...нажмите Enter чтобы продолжить...')
+        cls()
+        continue
     cls()
+    user_choise = int(user_choise)
     if user_choise == 0:
         break
     elif user_choise == 1:
-        ware_dict[1].recive_eq()
+        ware_dict[1].recive_eq()  # прием техники в ремонт
     elif user_choise == 2:
-        ware_dict[1].move_eq(ware_dict[2])
+        ware_dict[1].move_eq(ware_dict[2])  # перемещение в ремонт
     elif user_choise == 3:
-        ware_dict[2].make_eq(ware_dict[3])
+        ware_dict[2].make_eq(ware_dict[3])  # завершение ремонта
     elif user_choise == 4:
-        ware_dict[3].return_eq()
+        ware_dict[3].return_eq()  # выдача клиенту
     elif user_choise == 5:
-        for w in ware_dict.values():
+        for w in ware_dict.values():  # печать остатков
             w.show_eq()
         input('\n...нажмите Enter чтобы продолжить...')
     cls()
