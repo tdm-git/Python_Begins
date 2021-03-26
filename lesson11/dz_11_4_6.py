@@ -7,9 +7,11 @@ class Warehouse:
     def recive_eq(self):
         """ прием техники от клиента и размещение её в справочнике класса склад """
         print('Выберите вид оргтехники:')
-        type_eq = int(input('[1] - принтер \n[2] - сканер\n[3] - копир\nвведите порядковый номер - '))
-        if type_eq == 1:
-            eq_def = Printer
+        type_eq = int(input('[0] - отмена...\n[1] - принтер \n[2] - сканер\n[3] - копир\nвведите порядковый номер - '))
+        if type_eq == 0:
+            return
+        elif type_eq == 1:
+            eq_def = Scanner
         elif type_eq == 2:
             eq_def = Scanner
         elif type_eq == 3:
