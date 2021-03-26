@@ -129,13 +129,13 @@ ware_dict[3].device[Scanner('HP', 'SXN3200')] = 'к оплате - 1000 руб'
 ware_dict[3].device[Xerox('Xerox', 'X2500')] = 'к оплате - 2000 руб'
 # основная часть программы
 while True:
+    cls()
     print('ГЛАВНОЕ МЕНЮ:')
     print(str_menu)
     user_choise = input('\nвведите номер операции: ')
     if not user_choise.isdigit() or int(user_choise) > 5 or int(user_choise) < 0:
         print('некорректный выбор...повторите ввод...')
         input('\n...нажмите Enter чтобы продолжить...')
-        cls()
         continue
     cls()
     user_choise = int(user_choise)
@@ -153,4 +153,3 @@ while True:
         for w in ware_dict.values():  # печать остатков
             w.show_eq()
         input('\n...нажмите Enter чтобы продолжить...')
-    cls()
