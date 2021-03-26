@@ -11,7 +11,7 @@ class Warehouse:
         if type_eq == 0:
             return
         elif type_eq == 1:
-            eq_def = Scanner
+            eq_def = Printer
         elif type_eq == 2:
             eq_def = Scanner
         elif type_eq == 3:
